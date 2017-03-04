@@ -25,10 +25,9 @@ if __name__ == '__main__':
 
     try:
         repo_origin_url = str(check_output(CURRENT_REPO_ORIGIN))
-        repo_origin_url = repo_origin_url[2:-3]
+        repo_origin_url = repo_origin_url.replace("\n", "")
 
         repo_upstream_url = str(check_output(CURRENT_REPO_UPSTREAM))
-        repo_upstream_url = repo_upstream_url[2:-3]
 
         print("Getting repo's url...")
         print("Syncing repo:", repo_origin_url)
@@ -48,7 +47,7 @@ if __name__ == '__main__':
 
     except Exception as e:
         repo_origin_url = str(check_output(CURRENT_REPO_ORIGIN))
-        repo_origin_url = repo_origin_url[2:-3]
+        repo_origin_url = repo_origin_url.replace("\n", "")
 
         print("Getting repo's url...")
         print("Syncing repo:", repo_origin_url)
