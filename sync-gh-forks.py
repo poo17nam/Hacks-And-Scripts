@@ -2,10 +2,9 @@
 # coding=utf-8
 
 
-from subprocess import check_output, call
+from subprocess import call, check_output
 
 import requests
-
 
 if __name__ == '__main__':
     """
