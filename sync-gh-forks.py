@@ -2,6 +2,7 @@
 # coding=utf-8
 
 
+import os
 from subprocess import call, check_output
 
 import requests
@@ -46,7 +47,7 @@ if __name__ == '__main__':
 
     except Exception as e:
         repo_origin_url = str(check_output(CURRENT_REPO_ORIGIN))
-        repo_origin_url = repo_origin_url.replace("\n", "")
+        repo_origin_url = repo_origin_url[2:-3]
 
         print("Getting repo's url...")
         print("Syncing repo:", repo_origin_url)
