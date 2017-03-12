@@ -1,0 +1,30 @@
+---
+- name: Main Playbook to Setup My Fedora Machine
+  hosts: localhost
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Update all dnf packages
+    dnf:
+      name: '*'
+      state: latest
+
+  - name: Install the 'Development tools' package group
+    dnf:
+      name: '@Development tools'
+      state: present
+
+  - name: Install 'Vim'
+    dnf:
+      name: vim
+      state: present
+
+  - name: Install 'VLC' player
+    dnf:
+      name: vlc
+      state: present
+
+  - name: Install 'GIMP'
+    dnf:
+      name: gimp
+      state: present
