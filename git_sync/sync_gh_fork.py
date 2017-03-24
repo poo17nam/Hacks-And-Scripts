@@ -7,8 +7,9 @@ __github__ = "RatanShreshtha"
 import os
 from subprocess import call, check_output
 
-import requests
+import sys
 
+import requests
 
 """
    This script runs a bunch of boilerplate code to synchronise
@@ -39,7 +40,7 @@ def getRepoOriginUrl():
 
     try:
         repo_origin_url = str(check_output(CURRENT_REPO_ORIGIN))
-        repo_origin_url = repo_origin_url.replace("\n", "")
+        repo_origin_url = repo_origin_url.replace("b'", "").replace("\\n'", "")
 
         print("origin url for this repository:- ", repo_origin_url)
         return repo_origin_url
@@ -56,7 +57,8 @@ def getRepoUpstreamUrl():
 
     try:
         repo_upstream_url = str(check_output(CURRENT_REPO_UPSTREAM))
-        repo_upstream_url = repo_upstream_url.replace("\n", "")
+        repo_upstream_url = repo_upstream_url.replace("b'", "")
+        repo_upstream_url = repo_upstream_url.replace("\\n'", "")
 
         print("upstream url for this repository:- ", repo_upstream_url)
         return repo_upstream_url
@@ -144,7 +146,6 @@ def addRepoUpstream():
     """
 
     repo_origin_url = getRepoOriginUrl()
-    repo_origin_url = repo_origin_url[2:-3]
 
     if repo_origin_url[0] == "h":
         url_segments = repo_origin_url.split("https://github.com/")
@@ -152,9 +153,9 @@ def addRepoUpstream():
     if repo_origin_url[0] == "g":
         url_segments = repo_origin_url.split("git@github.com:")
 
-    uname_and_repo = url_segments[1]
-    uname_and_repo = uname_and_repo.replace(".git", "")
-    user, repo = uname_and_repo.split("/")
+    user_and_repo = url_segments[1]
+    user_and_repo = user_and_repo.replace(".git", "")
+    user, repo = user_and_repo.split("/")
 
     print("Getting upstream url for the repo ...")
     url = "https://api.github.com/repos/{}/{}".format(user, repo)
@@ -192,41 +193,39 @@ def sync():
 
     try:
         # Now try to get the upstream for the repository.
-        repo_upstream_url = getRepoUpstreamUrl()
+        assert getRepoUpstreamUrl()
 
-        # If upstream is present go in if block and do following.
-        if repo_upstream_url:
-            # First fetch the upstream
-            fetchUpstream()
+        # If upstream is present do following.
+        # First fetch the upstream
+        fetchUpstream()
 
-            # Then checkout master branch
-            checkoutMasterBranch
+        # Then checkout master branch
+        checkoutMasterBranch
 
-            # Then merge upstream master and local branch
-            mergeUpstream()
+        # Then merge upstream master and local branch
+        mergeUpstream()
 
-            # Now finally push the delta to the origin master
-            pushToOrigin()
-        # Since upstream is not present go in else block and do following
-        else:
-            # First add the upstream of the parent repository.
-            addRepoUpstream()
-
-            # Then fetch the upstream
-            fetchUpstream()
-
-            # Then checkout master branch
-            checkoutMasterBranch
-
-            # Then merge upstream master and local branch
-            mergeUpstream()
-
-            # Now finally push the delta to the origin master
-            pushToOrigin()
+        # Now finally push the delta to the origin master
+        pushToOrigin()
     except Exception as e:
-        print("Unable to start sysncing process")
         print(e)
-        raise
+        print("Trying to add upstream automatically.")
+
+        # Since upstream is not present do following
+        # First add the upstream of the parent repository.
+        addRepoUpstream()
+
+        # Then fetch the upstream
+        fetchUpstream()
+
+        # Then checkout master branch
+        checkoutMasterBranch
+
+        # Then merge upstream master and local branch
+        mergeUpstream()
+
+        # Now finally push the delta to the origin master
+        pushToOrigin()
 
     print("-" * 120)
     print("|" + "Ending Fork Syncing Process".center(118) + "|")
@@ -234,4 +233,12 @@ def sync():
 
 
 if __name__ == '__main__':
+    print(os.getcwd())
+
+    if len(sys.argv) > 1:
+        repository_to_be_synced = sys.argv[1]
+
+    os.chdir(repository_to_be_synced)
+    print(os.getcwd())
+
     sync()
