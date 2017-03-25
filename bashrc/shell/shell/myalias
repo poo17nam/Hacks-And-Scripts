@@ -13,7 +13,7 @@ alias download-mp3='youtube-dl -x --audio-format "mp3"'
 #==================================================================================================#
 
 # To sync the local forks with the parent repo.
-alias gh-fork-sync='python3 /home/ratan/Desktop/Hacks-And-Scripts/git_sync/sync_gh_fork.py'
+alias gh-fork-sync='python3 /home/ratan/Desktop/Hacks-And-Scripts/git/sync-gh-forks.py'
 
 #==================================================================================================#
 
