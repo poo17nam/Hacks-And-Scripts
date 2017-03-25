@@ -1,0 +1,34 @@
+# Here I have defined all my exports.
+
+# To avoid mistakes
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+#==================================================================================================#
+
+# To download a mp3 song using youtube video url
+alias download-mp3='youtube-dl -x --audio-format "mp3"'
+
+#==================================================================================================#
+
+# To sync the local forks with the parent repo.
+alias gh-fork-sync='python3 /home/ratan/Desktop/Hacks-And-Scripts/git/sync-gh-forks.py'
+
+#==================================================================================================#
+
+# Shortcut to test quick changes to bashrc
+alias reload='source ~/.bashrc'
+
+#==================================================================================================#
+
+# To move around easily
+alias goto-home='cd ~/'
+alias goto-documents='cd ~/Desktop'
+alias goto-documents='cd ~/Documents'
+alias goto-downloads='cd ~/Downloads'
+alias goto-music='cd ~/Music'
+alias goto-pictures='cd ~/Pictures'
+alias goto-videos='cd ~/Video'
+
+#==================================================================================================#

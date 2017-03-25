@@ -28,3 +28,8 @@
     dnf:
       name: gimp
       state: present
+
+  - name: Install 'youtube-dl'
+    dnf:
+      name: youtube-dl
+      state: present
