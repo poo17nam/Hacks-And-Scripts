@@ -5,9 +5,8 @@ __author__ = "Ratan Kulshreshtha"
 __github__ = "RatanShreshtha"
 
 import os
-from subprocess import call, check_output
-
 import sys
+from subprocess import call, check_output
 
 import requests
 
