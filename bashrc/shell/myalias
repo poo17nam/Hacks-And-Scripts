@@ -24,7 +24,7 @@ alias reload='source ~/.bashrc'
 
 # To move around easily
 alias goto-home='cd ~/'
-alias goto-documents='cd ~/Desktop'
+alias goto-desktop='cd ~/Desktop'
 alias goto-documents='cd ~/Documents'
 alias goto-downloads='cd ~/Downloads'
 alias goto-music='cd ~/Music'
