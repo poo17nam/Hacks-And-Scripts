@@ -18,7 +18,7 @@ alias gh-fork-sync='python3 /home/ratan/Desktop/Hacks-And-Scripts/git/sync-gh-fo
 #==================================================================================================#
 
 # Shortcut to test quick changes to bashrc
-alias postman='/home/ratan/Desktop/software/Postman/Postman &'
+alias postman='nohup /home/ratan/Desktop/software/Postman/Postman &'
 
 #==================================================================================================#
 
@@ -34,6 +34,6 @@ alias goto-documents='cd ~/Documents'
 alias goto-downloads='cd ~/Downloads'
 alias goto-music='cd ~/Music'
 alias goto-pictures='cd ~/Pictures'
-alias goto-videos='cd ~/Video'
+alias goto-videos='cd ~/Videos'
 
 #==================================================================================================#
