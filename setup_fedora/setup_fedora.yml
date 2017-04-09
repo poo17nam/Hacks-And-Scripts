@@ -9,9 +9,34 @@
       name: '*'
       state: latest
 
-  - name: Install the 'Development tools' package group
+  - name: Enable EPEL repository
     dnf:
-      name: '@Development tools'
+      name: 'https://mirrors.tuna.tsinghua.edu.cn/epel/7/x86_64/e/epel-release-7-9.noarch.rpm'
+      state: present
+
+  - name: Install the 'Development Tools' package group
+    dnf:
+      name: '@Development Tools'
+      state: present
+
+  - name: Install the 'C Development Tools and Libraries' package group
+    dnf:
+      name: '@C Development Tools and Libraries'
+      state: present
+
+  - name: Install Java
+    dnf:
+      name: java-openjdk
+      state: present
+
+  - name: Install Icedtea Web
+    dnf:
+      name: icedtea-web
+      state: present
+
+  - name: Install Node JS
+    dnf:
+      name: nodejs
       state: present
 
   - name: Install 'Vim'
