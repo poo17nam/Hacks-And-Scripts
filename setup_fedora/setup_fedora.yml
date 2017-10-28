@@ -1,6 +1,18 @@
 ---
-- name: Main Playbook to Setup My Fedora Machine
-  hosts: localhost
+- name: My playbook to setup my fedora 26 machine
+  hosts: mylaptop
+  vars:
+    user: "ratan"
+    epel_release_url: 'https://mirrors.tuna.tsinghua.edu.cn/epel/7/x86_64/e/epel-release-7-10.noarch.rpm'
+    rpmfusion_free_release: 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-26.noarch.rpm'
+    rpmfusion_nonfree_release: 'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-26.noarch.rpm'
+    atom_url: 'https://atom-installer.github.com/v1.19.2/atom.x86_64.rpm?s=1502914620&ext=.rpm'
+    remarkable_url: 'https://remarkableapp.github.io/files/remarkable-1.87-1.rpm'
+    slack_url: 'https://downloads.slack-edge.com/linux_releases/slack-2.7.1-0.1.fc21.x86_64.rpm'
+    skype_url: 'https://repo.skype.com/latest/skypeforlinux-64.rpm'
+    sky_url: 'https://tel.red/linux.php?f=sky-2.1.6940-1.fc26.x86_64.rpm'
+    citrix_url: 'https://downloads.citrix.com/10989/ICAClient-rhel-13.6.0.10243651-0.x86_64.rpm?__gda__=1503403439_5d309df9cf3f275ef5a457aba700baff'
+    vimrc_url: 'https://raw.githubusercontent.com/RatanShreshtha/Hacks-And-Scripts/master/vim/vimrc'
   become: true
   become_method: sudo
   tasks:
@@ -9,52 +21,185 @@
       name: '*'
       state: latest
 
-  - name: Enable EPEL repository
+  - name: Install EPEL, rpmfusion repositories
     dnf:
-      name: 'https://mirrors.tuna.tsinghua.edu.cn/epel/7/x86_64/e/epel-release-7-9.noarch.rpm'
+      name: "{{ item }}"
       state: present
+    with_items:
+     - "{{epel_release_url}}"
+     - "{{rpmfusion_free_release}}"
+     - "{{rpmfusion_nonfree_release}}"
 
-  - name: Install the 'Development Tools' package group
+  - name: Install the development, basic, virtualisation group
     dnf:
-      name: '@Development Tools'
+      name: "{{ item }}"
       state: present
+    with_items:
+      - "@Development Tools"
+      - '@C Development Tools and Libraries'
+      - '@Basic Desktop'
+      - '@virtualization'
 
-  - name: Install the 'C Development Tools and Libraries' package group
+  - name: Install the development libraries
     dnf:
-      name: '@C Development Tools and Libraries'
+      name: "{{ item }}"
       state: present
+    with_items:
+      - python-devel
+      - python3-devel
+      - dnf-plugins-core
+      - guestfs-browser
+      - libguestfs-tools
+      - python-libguestfs
+      - virt-top
+      - webkitgtk3.x86_64
+      - gtksourceview3
 
-  - name: Install Java
+  - name: Install Programming Languages and development depandancies
     dnf:
-      name: java-openjdk
+      name: "{{ item }}"
       state: present
+    with_items:
+     - java-openjdk
+     - icedtea-web
+     - nodejs
+     - go
+     - rust
+     - elixir
 
-  - name: Install Icedtea Web
+  - name: Install multimedia, chat softwares
     dnf:
-      name: icedtea-web
+      name: "{{ item }}"
       state: present
+    with_items:
+      - gimp
+      - vlc
+      - youtube-dl
+      - deluge
+      - inkscape
+      - hexchat
+      - picard
+      - entangle
+      - shotwell
+      - "{{ slack_url }}"
+      - "{{ skype_url }}"
+      - "{{ sky_url }}"
 
-  - name: Install Node JS
+  - name: Install utils
     dnf:
-      name: nodejs
+      name: "{{ item }}"
       state: present
+    with_items:
+      - mediawriter
+      - nuntius
+      - labyrinth
+      - powertop
+      - gnome-todo
+      - wireshark
+      - ibus-typing-booster
+      - hunspell-en
+      - hunspell-hi
+      - chromium
+      - "{{ remarkable_url }}"
 
-  - name: Install 'Vim'
+  - name: Install text editor, ide terminals etc
     dnf:
-      name: vim
+      name: "{{ item }}"
       state: present
+    with_items:
+      - vim
+      - "{{ atom_url }}"
+      - fish
+      - powerline
+      - powerline-fonts
+      - tilix
 
-  - name: Install 'VLC' player
-    dnf:
-      name: vlc
-      state: present
+  - name: Install atom packages
+    command: apm install atom-beautify minimap highlight-selected simple-drag-drop-text color-picker pigments linter file-icons
+    become: false
+    become_user: "{{ user }}"
 
-  - name: Install 'GIMP'
+  - name: Install vagarant to make VMs and experiment
     dnf:
-      name: gimp
+      name: "{{ item }}"
       state: present
+    with_items:
+      - libvirt
+      - vagrant
+      - vagrant-libvirt
+      - vagrant-sshfs
 
-  - name: Install 'youtube-dl'
+  - name: Remove old docker installation
     dnf:
-      name: youtube-dl
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - docker
+      - docker-common
+      - docker-selinux
+      - docker-engine-selinux
+      - docker-engine
+
+  - name: Add docker repository
+    command: dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+
+  - name: Update dnf cache
+    command: dnf makecache
+
+  # - name: Install docker-ce
+  #   dnf:
+  #     name: docker-ce
+  #     state: present
+
+
+  - name: Install more wallpaper packs
+    dnf:
+      name: "{{ item }}"
       state: present
+    with_items:
+      - f25-backgrounds-gnome
+      - f24-backgrounds-gnome
+      - f23-backgrounds-gnome
+      - f22-backgrounds-gnome
+      - f21-backgrounds-gnome
+      - f25-backgrounds-extras-gnome
+      - f24-backgrounds-extras-gnome
+      - f23-backgrounds-extras-gnome
+      - f22-backgrounds-extras-gnome
+      - f21-backgrounds-extras-gnome
+
+  - name: Install global npm packages.
+    npm:
+      name: "{{ item }}"
+      global: yes
+      state: present
+    with_items:
+      - mocha
+      - forever
+      - grunt
+      - gulp
+      - bower
+      - newman
+
+  - name: Get vimrc for user
+    get_url:
+      url: "{{ vimrc_url }}"
+      dest: "/home/{{user}}/.vimrc"
+
+  - user:
+      name: "{{ user }}"
+      groups: wireshark
+      append: yes
+
+  - systemd:
+      state: restarted
+      daemon_reload: yes
+      name: crond
+
+  - systemd:
+      name: "{{ item }}"
+      state: started
+      enabled: True
+    with_items:
+      - powertop
+      - libvirtd
